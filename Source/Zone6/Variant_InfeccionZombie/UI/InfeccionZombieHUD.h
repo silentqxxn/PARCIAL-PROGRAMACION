@@ -5,6 +5,7 @@
 #include "InfeccionZombieHUD.generated.h"
 
 class AInfeccionZombieGameState;
+class UUserWidget;
 
 UCLASS()
 class ZONE6_API AInfeccionZombieHUD : public AHUD
@@ -14,11 +15,24 @@ class ZONE6_API AInfeccionZombieHUD : public AHUD
 public:
     AInfeccionZombieHUD();
 
+    // Asignar en el Blueprint hijo: widget con contadores J1/J2 y timer
+    UPROPERTY(EditDefaultsOnly, Category = "HUD")
+    TSubclassOf<UUserWidget> ClaseWidgetHUD;
+
+    // Asignar en el Blueprint hijo: pantalla de resultado final
+    UPROPERTY(EditDefaultsOnly, Category = "HUD")
+    TSubclassOf<UUserWidget> ClaseWidgetResultado;
+
 protected:
     virtual void BeginPlay() override;
 
 private:
-    // Se suscribe a los delegates del GameState
+    UPROPERTY()
+    UUserWidget* WidgetHUD = nullptr;
+
+    UPROPERTY()
+    UUserWidget* WidgetResultado = nullptr;
+
     void SuscribirseAGameState();
 
     UFUNCTION()
