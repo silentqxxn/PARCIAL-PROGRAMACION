@@ -5,6 +5,7 @@
 #include "InfeccionZombieGameMode.generated.h"
 
 class AInfeccionZombieGameState;
+class AInfeccionZombiePlayerState;
 
 UCLASS()
 class ZONE6_API AInfeccionZombieGameMode : public AGameModeBase
@@ -23,9 +24,21 @@ public:
     float TiempoPartida = 600.0f;
 
     UPROPERTY(EditDefaultsOnly, Category = "GameMode|Config")
-    int32 TotalZonas = 6;
+    int32 TotalZonas = 4;
 
-    // Llamado por el Actor de zona cuando el zombi toca el corazón
+    // Intervalo entre spawns del ítem de ralentización (segundos)
+    UPROPERTY(EditDefaultsOnly, Category = "GameMode|Config")
+    float IntervaloSpawnItem = 20.0f;
+
+    // Posiciones donde puede spawnear el ítem (configurar en Blueprint)
+    UPROPERTY(EditDefaultsOnly, Category = "GameMode|Config")
+    TArray<FVector> PosicionesSpawnItem;
+
+    // Clase del ítem de ralentización a spawnear
+    UPROPERTY(EditDefaultsOnly, Category = "GameMode|Config")
+    TSubclassOf<AActor> ClaseSlowItem;
+
+    // Llamado por AInfeccionZombieZona cuando se completa la captura
     UFUNCTION(BlueprintCallable, Category = "GameMode")
     void InfectarZona(int32 IndexZona, int32 JugadorIndex);
 
@@ -39,6 +52,7 @@ private:
     FTimerHandle ConteoInicialTimer;
     FTimerHandle PartidaTimer;
     FTimerHandle TickTimer;
+    FTimerHandle SpawnItemTimer;
 
     int32 JugadoresConectados = 0;
 
@@ -48,4 +62,7 @@ private:
     void IniciarPartida();
     void FinalizarPartida();
     void TickTiempo();
+    void SpawnearItem();
+
+    void ActualizarPuntajesPlayerState();
 };
